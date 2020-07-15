@@ -6,9 +6,12 @@ from metrics import *
 import csv
 import logging
 
+# 0.8465603334659322
+
+location = "Florida"
 
 # Convert the ground truth into a mask
-GT = cv2.imread("Data/Florida_GT.png")
+GT = cv2.imread(f"Data/{location}/{location}_GT.png")
 GT = np.array(GT)
 
 # Select one channel
@@ -20,7 +23,7 @@ plt.imshow(GT,  cmap="Blues")
 plt.show()
 
 # Import/Extract MSI bands
-MSI = np.load(f"Data/Florida.npy")
+MSI = np.load(f"Data/{location}/{location}_MSI.npy")
 blue = MSI[-1][:, :, 1]
 green = MSI[-1][:, :, 2]
 red = MSI[-1][:, :, 3]
@@ -36,9 +39,9 @@ pa = []
 
 # Get the data for a perfect
 for val in l:
-    i = val   # NDBI
+    i = 1   # NDBI
     j = 0.75    # MDWI.1
-    k = 1   # MDWI.2
+    k = 0.75   # MDWI.2
 
     WI = ((i * ((SWIR2 - NIR) / (SWIR2 + NIR))) +
           (j * ((green - SWIR2) / (green + SWIR2))) +
@@ -53,12 +56,21 @@ for val in l:
     miou.append(mean_IU(eval_segm=WI, gt_segm=GT))
     pa.append(pixel_accuracy(eval_segm=WI, gt_segm=GT))
 
+print(miou)
+
 plt.plot(l, miou)
-plt.plot(l, pa)
+# plt.plot(l, pa)
 plt.xlabel("Scalar")
 plt.ylabel("MIOU")
 plt.title(f"Scalar applied to MNDWI, with NDBI set to 0.75")
 plt.show()
+
+best_value =  max(miou)
+a = np.array(miou)
+
+
+
+print("Highest is: ", max(miou))
 
 
 

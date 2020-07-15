@@ -6,8 +6,10 @@ from metrics import *
 import csv
 import logging
 
+location = "Florida"
+
 # Convert the ground truth into a mask
-GT = cv2.imread("Data/Florida_GT.png")
+GT = cv2.imread(f"Data/{location}/{location}_GT.png")
 GT = np.array(GT)
 
 # Select one channel
@@ -19,7 +21,7 @@ plt.imshow(GT, cmap="Blues")
 plt.show()
 
 # Import/Extract MSI bands
-MSI = np.load(f"Data/Florida.npy")
+MSI = np.load(f"Data/{location}/{location}_MSI.npy")
 blue = MSI[-1][:, :, 1]
 green = MSI[-1][:, :, 2]
 red = MSI[-1][:, :, 3]
@@ -73,10 +75,12 @@ PI_ma = mean_accuracy(eval_segm=PI, gt_segm=GT)
 PI_reference = "Jain et al., 2020"
 
 # Organise data for plots
-eval = [NBDI_reference, NWDI_reference, MNDWI_reference, I_reference, PI_reference]
-eval_miou = [NBDI_miou, NWDI_miou, MNDWI_miou, I_miou, PI_miou]
-eval_pa = [NBDI_pa, NWDI_pa, MNDWI_pa, I_pa, PI_pa]
-eval_ma = [NBDI_ma, NWDI_ma, MNDWI_ma, I_ma, PI_ma]
+eval = [NBDI_reference, NWDI_reference, MNDWI_reference, I_reference, PI_reference, "TJ"]
+eval_miou = [NBDI_miou, NWDI_miou, MNDWI_miou, I_miou, PI_miou, 0.8479796446602338]
+eval_pa = [NBDI_pa, NWDI_pa, MNDWI_pa, I_pa, PI_pa, " "]
+eval_ma = [NBDI_ma, NWDI_ma, MNDWI_ma, I_ma, PI_ma, " "]
+
+print(eval_miou)
 
 # Metric vs Algorithm
 plt.bar(eval, eval_miou)
